@@ -31,8 +31,6 @@ class EventExtractor(dspy.Module):
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG) 
-
-
     documents = [
         "Taking place in San Francisco, USA, from the 10th to the 12th of June, 2024, the Global Developers Conference is the annual gathering spot for developers worldwide, offering insights into software engineering, web development, and mobile applications.",
         "The AI Innovations Summit, scheduled for 15-17 September 2024 in London, UK, aims at professionals and researchers advancing artificial intelligence and machine learning.",
@@ -66,22 +64,13 @@ if __name__ == "__main__":
         "The International Space Exploration Symposium, scheduled in Houston, USA from 2024-08-05 to 2024-08-07, invites discussions on space exploration technologies and missions."
     ]
 
-    gemma_model = dspy.OllamaLocal(
-        model="gemma:2b", max_tokens=500
-    )
-
     client = QdrantClient(os.environ.get("QDRANT_URL"))
-    client.add(
-        collection_name="document-parts",
-        documents=documents, metadata=[{"document": document} for document in documents],
-    )
+    client.add( collection_name="document-parts", documents=documents, metadata=[{"document": document} for document in documents])
+    qdrant_retriever = QdrantRM( qdrant_collection_name="document-parts", qdrant_client=client)
 
-    qdrant_retriever = QdrantRM(
-        qdrant_collection_name="document-parts", qdrant_client=client,
-    )
-
-    dspy.configure(lm=gemma_model, rm=qdrant_retriever)
-
-    extractor = EventExtractor()
-
-    print(extractor.forward("Blockchain events close to Europe"))
+    for m in ['gemma:2b','gemma2:9b','llama3:latest','phi3:3.8b']:
+        print ("Checking: ",m)
+        gemma_model = dspy.OllamaLocal( model=m, max_tokens=500)
+        dspy.configure(lm=gemma_model, rm=qdrant_retriever)
+        extractor = EventExtractor()
+        print(extractor.forward("Blockchain events close to Europe"))
