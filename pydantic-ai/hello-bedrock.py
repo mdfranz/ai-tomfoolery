@@ -7,6 +7,9 @@ from pydantic_ai_bedrock.bedrock import BedrockModel
 
 # logging.basicConfig(level=logging.DEBUG)
 
+
+# See https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html 
+
 bedrock_models = ["anthropic.claude-3-5-sonnet-20241022-v2:0","cohere.command-r-plus-v1:0",
                   "us.meta.llama3-3-70b-instruct-v1:0","us.amazon.nova-pro-v1:0"]
 
