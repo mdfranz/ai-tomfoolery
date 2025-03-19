@@ -1,3 +1,2 @@
 pydantic-ai
-pydantic_ai_bedrock
 bpython

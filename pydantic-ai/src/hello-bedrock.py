@@ -3,7 +3,8 @@
 # import logging,os
 
 from pydantic_ai import Agent
-from pydantic_ai_bedrock.bedrock import BedrockModel
+from pydantic_ai.models.bedrock import BedrockConverseModel
+
 
 # logging.basicConfig(level=logging.DEBUG)
 
@@ -17,7 +18,7 @@ if __name__ == "__main__":
     for m in bedrock_models:
 
         print (f"Testing {m}")
-        model = BedrockModel( model_name=m)
+        model = BedrockConverseModel(model_name=m)
         agent = Agent(model=model, system_prompt='Be verbose, reply with at least 3 sentences with elaboration')
         result = agent.run_sync('Where does "hello world" come from?')
         print(result.data)
