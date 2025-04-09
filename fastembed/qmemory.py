@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# From https://qdrant.tech/documentation/fastembed/fastembed-semantic-search/
+
 import logging,os
 from qdrant_client import QdrantClient
 

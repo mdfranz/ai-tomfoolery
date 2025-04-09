@@ -1,0 +1,5 @@
+agno
+anthropic
+yfinance
+openai
+ollama
