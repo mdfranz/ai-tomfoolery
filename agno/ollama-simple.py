@@ -1,11 +1,9 @@
 from agno.agent import Agent, RunResponse  # noqa
 from agno.models.ollama import Ollama
 
-agent = Agent(model=Ollama(id="phi4:14b"), markdown=True)
+ollama_models = ['cogito:3b','cogito:8b','cogito:14b','cogito:3b','phi4-mini:3.8b','phi4:14b']
 
-# Get the response in a variable
-# run: RunResponse = agent.run("Share a 2 sentence horror story")
-# print(run.content)
-
-# Print the response in the terminal
-agent.print_response("Share a 2 sentence horror story")
+for m in ollama_models:
+    agent = Agent(model=Ollama(id=m), markdown=False,telemetry=True,debug_mode=True)
+    resp = agent.run("Write a bash shell script that calls the AWS cli to retrieve all the running instances in all regions. Do not print the results for regions where there are no instances running")
+    print(resp.content)
