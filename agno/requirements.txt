@@ -3,3 +3,6 @@ anthropic
 yfinance
 openai
 ollama
+boto3
+ChromaDB
+pypdf
