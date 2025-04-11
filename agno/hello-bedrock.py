@@ -19,7 +19,7 @@ if __name__ == "__main__":
             model=AwsBedrock(id=m), 
             description="You are an amazing full stack technology historian",
             instructions=["Be verbose, reply with at least 3 sentences with elaboration"], 
-            markdown=False,
+            markdown=True,
             debug_mode=True,
             exponential_backoff=True,
             telemetry=True
