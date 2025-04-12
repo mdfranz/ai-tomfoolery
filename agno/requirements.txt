@@ -1,9 +1,7 @@
 agno
 anthropic
-yfinance
 openai
 ollama
 boto3
-ChromaDB
 pypdf
 qdrant-client
