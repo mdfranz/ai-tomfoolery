@@ -5,3 +5,5 @@ ollama
 boto3
 pypdf
 qdrant-client
+importlib-metadata
+packaging
