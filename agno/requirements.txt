@@ -7,3 +7,4 @@ pypdf
 qdrant-client
 importlib-metadata
 packaging
+fastembed
