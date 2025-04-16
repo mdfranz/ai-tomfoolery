@@ -18,7 +18,6 @@ from agno.embedder.fastembed import FastEmbedEmbedder
 
 if __name__ == "__main__":
 
-
     if len(sys.argv) > 1:
         COLLECTION_NAME = f"pdf-reader-{platform.node()}-{sys.argv[1]}"
         if sys.argv[1] == "ollama":
