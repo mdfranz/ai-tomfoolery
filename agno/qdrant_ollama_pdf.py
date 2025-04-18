@@ -39,7 +39,8 @@ if __name__ == "__main__":
 
     kb.load(recreate=True)
 
-    useful_models = ['cogito:14b', 'qwen2.5:14b', 'mistral-nemo:12b','hermes3:8b','qwen2.5:7b','cogito:8b','llama3.2:3b','cogito:3b']
+    useful_models = ['cogito:14b', 'qwen2.5:14b', 'mistral-nemo:12b','llama3.2:3b']
+    # useful_models = ['cogito:14b', 'qwen2.5:14b', 'mistral-nemo:12b','hermes3:8b','qwen2.5:7b','cogito:8b','llama3.2:3b','cogito:3b']
 
     for m in useful_models:
         print (f"\n\nRunning {m}")
