@@ -10,3 +10,4 @@ packaging
 fastembed
 lancedb
 tantivy
+google-genai

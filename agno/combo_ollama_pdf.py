@@ -55,7 +55,7 @@ if __name__ == "__main__":
         'https://www.fedramp.gov/assets/resources/documents/CSP_Continuous_Monitoring_Performance_Management_Guide.pdf']
 
     parser = argparse.ArgumentParser(description="Run an agent with different models and vector databases.")
-    parser.add_argument("--engine", type=str, default="qdrant", choices=["qdrant", "chromadb", "lancedb"], help="Vector database engine to use.")
+    parser.add_argument("--engine", type=str, default="chromadb", choices=["qdrant", "chromadb", "lancedb"], help="Vector database engine to use.")
     parser.add_argument("--embedder", type=str, default="ollama", choices=["ollama", "fastembed","openai"], help="Embedder to use.")
     parser.add_argument("--model", type=str, default=None, help="Ollama model to use. If not provided, iterates through a predefined list.")
    
