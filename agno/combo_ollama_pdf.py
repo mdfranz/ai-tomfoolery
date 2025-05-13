@@ -15,6 +15,7 @@ from agno.vectordb.qdrant import Qdrant
 from agno.vectordb.lancedb import LanceDb
 from agno.vectordb.chroma import ChromaDb
 
+# Documents formats
 from agno.knowledge.pdf_url import PDFUrlKnowledgeBase,PDFUrlReader
 
 # Supported Embedders
@@ -50,9 +51,9 @@ def create_kb(vdb,doclist,recreate=True):
 
 if __name__ == "__main__":
     urls = ['https://www.fedramp.gov/assets/resources/documents/FedRAMP_Collaborative_ConMon_Quick_Guide.pdf',
-        'https://www.fedramp.gov/assets/resources/documents/CSP_Incident_Communications_Procedures.pdf',
         'https://www.fedramp.gov/assets/resources/documents/CSP_Vulnerability_Scanning_Requirements.pdf',
         'https://www.fedramp.gov/assets/resources/documents/CSP_Continuous_Monitoring_Performance_Management_Guide.pdf']
+        # 'https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-137A.pdf']
 
     parser = argparse.ArgumentParser(description="Run an agent with different models and vector databases.")
     parser.add_argument("--engine", type=str, default="chromadb", choices=["qdrant", "chromadb", "lancedb"], help="Vector database engine to use.")
@@ -75,12 +76,12 @@ if __name__ == "__main__":
     for m in models_to_use:
         print (f"\n\nRunning {m}")
 
-        agent = Agent(knowledge=kb,model=Ollama(id=m), exponential_backoff=True, markdown=True,telemetry=False,debug_mode=False,
+        agent = Agent(knowledge=kb,model=Ollama(id=m), exponential_backoff=True, markdown=True,telemetry=False,debug_mode=True,stream=True,
             description="You are a season FedRAMP compliance analyst with in depth experience with the NIST 800-53 framework and operational security monitoring tools in AWS GovCloud", instructions=['You have an important briefing with the CISO and Product Manager and you must impress them with your knowledge and experience so they provide the necessary funding for tools and headcount']
         )
         r = agent.run("1) Define continous monitoring  2) Explain the three most important steps (in order) to implement a continous monitoring program.  For each step identify the NIST 800-53 control (or controls) that are relevant to ensure you can pass your annual assessment and achieve monthly reporting goals")
 
-        tools = [item['tool_args'] for item in r.tools]
+        # tools = [item['tool_args'] for item in r.tools]
         content = r.content
         metrics = r.metrics
-        print(tools)
+        # print(tools)
