@@ -10,10 +10,10 @@ OPENAI_API_KEY
 GOOGLE_API_KEY
 ```
 # Core Libraries
-agno anthropic openai ollama google-genai
-
-# Bedrock
-boto3
+`agno anthropic openai ollama google-genai boto`
 
 # RAG
-pypdf qdrant-client importlib-metadata packaging fastembed lancedb tantivy chromadb
+`pypdf qdrant-client importlib-metadata packaging fastembed lancedb tantivy chromadb`
+
+# Memory
+`redis`
