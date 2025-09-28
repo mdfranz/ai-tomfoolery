@@ -3,7 +3,7 @@
 See [Ollama](https://docs.litellm.ai/docs/providers/ollama)
 
 ```
-export OLLAMA_API_BASE=$OLLAMA_HOST
+export OLLAMA_API_BASE=http://x.x.x.x:11434
 ```
 
 # CLI

@@ -26,17 +26,13 @@ if __name__ == "__main__":
     vector_db = LanceDb( table_name=COLLECTION_NAME, uri="/tmp/lancedb", search_type=SearchType.keyword)
 
     kb = PDFUrlKnowledgeBase(
-        urls = ['https://www.fedramp.gov/assets/resources/documents/FedRAMP_Collaborative_ConMon_Quick_Guide.pdf',
-                'https://www.fedramp.gov/assets/resources/documents/CSP_Incident_Communications_Procedures.pdf',
-                'https://www.fedramp.gov/assets/resources/documents/CSP_Vulnerability_Scanning_Requirements.pdf',
-                'https://www.fedramp.gov/assets/resources/documents/CSP_Continuous_Monitoring_Performance_Management_Guide.pdf'
-        ],
+        urls = ['https://www.fedramp.gov/resources/documents/FedRAMP_Collaborative_ConMon_Quick_Guide.pdf'],
         vector_db=vector_db,
     )
 
     kb.load(recreate=True)
 
-    useful_models = ['cogito:14b', 'qwen2.5:14b', 'mistral-nemo:12b','llama3.2:3b']
+    useful_models = ['gpt-oss:20b','cogito:14b', 'qwen2.5:14b', 'mistral-nemo:12b','llama3.2:3b']
 
     for m in useful_models:
         print (f"\n\nRunning {m}")

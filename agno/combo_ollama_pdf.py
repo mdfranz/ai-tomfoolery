@@ -50,10 +50,7 @@ def create_kb(vdb,doclist,recreate=True):
     return kb
 
 if __name__ == "__main__":
-    urls = ['https://www.fedramp.gov/assets/resources/documents/FedRAMP_Collaborative_ConMon_Quick_Guide.pdf',
-        'https://www.fedramp.gov/assets/resources/documents/CSP_Vulnerability_Scanning_Requirements.pdf',
-        'https://www.fedramp.gov/assets/resources/documents/CSP_Continuous_Monitoring_Performance_Management_Guide.pdf']
-        # 'https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-137A.pdf']
+    urls = [ 'https://www.fedramp.gov/resources/documents/FedRAMP_Collaborative_ConMon_Quick_Guide.pdf']
 
     parser = argparse.ArgumentParser(description="Run an agent with different models and vector databases.")
     parser.add_argument("--engine", type=str, default="chromadb", choices=["qdrant", "chromadb", "lancedb"], help="Vector database engine to use.")
@@ -81,7 +78,10 @@ if __name__ == "__main__":
         )
         r = agent.run("1) Define continous monitoring  2) Explain the three most important steps (in order) to implement a continous monitoring program.  For each step identify the NIST 800-53 control (or controls) that are relevant to ensure you can pass your annual assessment and achieve monthly reporting goals")
 
+        print(r)
+        print (type(r))
+
         # tools = [item['tool_args'] for item in r.tools]
-        content = r.content
-        metrics = r.metrics
+        #content = r.content
+        #metrics = r.metrics
         # print(tools)

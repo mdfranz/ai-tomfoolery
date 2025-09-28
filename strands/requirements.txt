@@ -1,0 +1,5 @@
+strands-agents
+strands-agents-tools
+strands-agents[litellm]
+strands-agents[ollama]
+aiohttp>=3.12.13
