@@ -28,8 +28,8 @@ runner = InMemoryRunner(
 
 
 def create_session():
-    session = asyncio.run(
-        runner.session_service.create_session(app_name=APP_NAME, user_id=USER_ID)
+    session = runner.session_service.create_session_sync(
+        app_name=APP_NAME, user_id=USER_ID
     )
     return session
 
