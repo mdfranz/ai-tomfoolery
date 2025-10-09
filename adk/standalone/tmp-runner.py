@@ -1,9 +1,13 @@
+#
+# Originally based on https://github.com/koverholt/adk-runtime-example
+#
+
 import asyncio, os, logging
 
+from google.genai import types
 from google.adk.agents import Agent
 from google.adk.runners import InMemoryRunner
 from google.adk.models.lite_llm import LiteLlm
-from google.genai import types
 
 # Configure logging
 logging.basicConfig(
@@ -16,9 +20,7 @@ logging.basicConfig(
 litellm_logger = logging.getLogger("LiteLLM")
 litellm_logger.handlers = []
 litellm_logger.propagate = True
-#
-# See https://github.com/koverholt/adk-runtime-example
-#
+
 
 APP_NAME = "ollama"
 USER_ID = "user"
@@ -26,46 +28,42 @@ SESSION_ID = "session"
 
 
 class ModelTester:
-    """A class to test a single model."""
-
-    def __init__(self, model_id: str):
-        """Initialize the ModelTester.
-
-        Args:
-            model_id: The ID of the model to test.
-        """
+    def __init__(self, model_id: str, agent: Agent, runner: InMemoryRunner, session):
         self.model_id = model_id
-        self.agent = self._create_agent()
-        self.runner = self._create_runner()
-        self.session = self._create_session()
+        self.agent = agent
+        self.runner = runner
+        self.session = session
 
-    def _create_agent(self) -> Agent:
+    @classmethod
+    async def create(cls, model_id: str) -> "ModelTester":
+        """Factory method to create a ModelTester instance."""
+
+        agent = cls._create_agent(model_id)
+        runner = cls._create_runner(agent)
+        session = await runner.session_service.create_session(
+            app_name=APP_NAME, user_id=USER_ID
+        )
+        return cls(model_id, agent, runner, session)
+
+    @staticmethod
+    def _create_agent(model_id: str) -> Agent:
         """Create an agent for the model."""
         return Agent(
-            name=self.model_id.replace("/", "").replace(":", "").replace("-", ""),
-            model=LiteLlm(model=self.model_id),
-            description=f"Agent for {self.model_id}",
-            instruction="""
-               You are a silly 3rd grader that says inappropriate things all the time
-            """,
+            name=model_id.replace("/", "").replace(":", "").replace("-", ""),
+            model=LiteLlm(model=model_id),
+            description=f"Agent for {model_id}",
+            instruction="""You are a silly 3rd grader that says inappropriate things all the time""",
         )
 
-    def _create_runner(self) -> InMemoryRunner:
+    @staticmethod
+    def _create_runner(agent: Agent) -> InMemoryRunner:
         """Create an in-memory runner for the agent."""
         return InMemoryRunner(
-            agent=self.agent,
+            agent=agent,
             app_name=APP_NAME,
         )
 
-    def _create_session(self):
-        """Create a session for the runner."""
-        return asyncio.run(
-            self.runner.session_service.create_session(
-                app_name=APP_NAME, user_id=USER_ID
-            )
-        )
-
-    def query(self, prompt: str):
+    async def query(self, prompt: str):
         """Query the agent with the given prompt.
 
         Args:
@@ -87,26 +85,8 @@ class ModelTester:
                 print(f"\n{message.author} said  {message.content.parts[0].text}")
 
 
-def test_model(model_id: str):
-    """Create a ModelTester for the given model and query it.
-
-    Args:
-        model_id: The ID of the model to test.
-    """
-    try:
-        logging.info("=" * 60)
-        logging.info("Testing model: %s", model_id)
-        logging.info("=" * 60)
-
-        tester = ModelTester(model_id)
-        tester.query("Tell me a joke")
-        tester.query("Tell me a story")
-
-    except Exception as e:
-        logging.error("Error testing model %s: %s", model_id, e)
-
-
-if __name__ == "__main__":
+async def main():
+    """Main function to test multiple models."""
     MODEL_IDS = [
         "ollama/granite4:latest",
         "ollama/cogito:14b",
@@ -116,4 +96,13 @@ if __name__ == "__main__":
 
     # Iterate through each model
     for model_id in MODEL_IDS:
-        test_model(model_id)
+        try:
+            tester = await ModelTester.create(model_id)
+            await tester.query("Tell me a joke")
+            await tester.query("Tell me a story")
+        except Exception as e:
+            logging.error("Error testing model %s: %s", model_id, e)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
