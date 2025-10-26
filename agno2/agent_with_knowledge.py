@@ -10,10 +10,11 @@ from agno.vectordb.lancedb import LanceDb, SearchType
 # Load Agno documentation into Knowledge
 
 ollama_inferencing_models = [
-    "phi4-mini:3.8b",
+    "llama3.1:8b",
+    "qwen3:14b",
+    "cogito:14b",
     "granite4:micro",
     "granite4",
-    "granite3.2:8b",
     "gpt-oss:20b",
 ]
 
@@ -36,6 +37,7 @@ if __name__ == "__main__":
     )
 
     for m in ollama_inferencing_models:
+        print(f"\n\n\nTESTING {m} ")
         agent = Agent(
             name="Agno Assist",
             model=Ollama(id=m),
@@ -48,13 +50,16 @@ if __name__ == "__main__":
             knowledge=knowledge,
             tools=[ReasoningTools(add_instructions=True)],
             add_datetime_to_context=True,
-            markdown=False,
+            markdown=True,
             debug_mode=True,
         )
 
-        agent.print_response(
-            "What are Agents?",
-            stream=True,
-            show_full_reasoning=True,
-            stream_events=True,
-        )
+        try:
+            agent.print_response(
+                "What are Agents?",
+                stream=True,
+                show_full_reasoning=True,
+                stream_events=True,
+            )
+        except Exception as e:
+            print(f"An error occurred for model {m}: {e}")
