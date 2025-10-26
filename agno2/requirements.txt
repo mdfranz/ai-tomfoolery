@@ -1,2 +1,5 @@
 agno
 ollama
+openai
+lancedb
+tantivy
