@@ -10,10 +10,11 @@ from agno.vectordb.chroma import ChromaDb
 ollama_inferencing_models = [
     "llama3.1:8b",
     "qwen3:14b",
-    # "cogito:14b",
     "granite4:micro",
     "granite4",
-    # "gpt-oss:20b",
+    "cogito:8b",
+    "cogito:14b",
+    "gpt-oss:20b",
 ]
 
 if __name__ == "__main__":
@@ -55,7 +56,7 @@ if __name__ == "__main__":
             ],
             knowledge=knowledge,
             tools=[ReasoningTools(add_instructions=True)],
-            add_datetime_to_context=True,
+            add_datetime_to_context=False,
             markdown=True,
             debug_mode=True,
         )
