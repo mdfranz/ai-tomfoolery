@@ -1,4 +1,4 @@
-import sys
+import sys,time
 from agno.agent import Agent, RunOutput
 from agno.knowledge.embedder.openai import OpenAIEmbedder
 from agno.knowledge.embedder.google import GeminiEmbedder
@@ -37,7 +37,9 @@ if __name__ == "__main__":
     elif sys.argv[2] == "qwen3":
         my_embedder = OllamaEmbedder(id="qwen3-embedding:8b")
 
-    print(f"Emmedder: {my_embedder}")
+    print(f"Embedder: {my_embedder}\n")
+
+    time.sleep(3)
     if sys.argv[1] == "lancedb":
         knowledge = Knowledge(
             vector_db=LanceDb(
@@ -60,6 +62,7 @@ if __name__ == "__main__":
         )
 
     knowledge.add_content(name="Job Description", path="ai-cloud-security-engineer.md")
+    time.sleep(3)
 
     for m in ollama_tool_models:
         print(f"\n\n\nTESTING {m} ")
@@ -91,3 +94,4 @@ if __name__ == "__main__":
             )
         except Exception as e:
             print(f"An error occurred for model {m}: {e}")
+        time.sleep(2)
