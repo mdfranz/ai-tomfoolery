@@ -1,16 +1,18 @@
-import sys, time
+import sys, time, datetime
 from agno.agent import Agent, RunOutput
+from agno.models.ollama import Ollama
+
 from agno.knowledge.embedder.openai import OpenAIEmbedder
 from agno.knowledge.embedder.google import GeminiEmbedder
 from agno.knowledge.embedder.ollama import OllamaEmbedder
 from agno.knowledge.knowledge import Knowledge
-from agno.models.ollama import Ollama
+from agno.knowledge.reader.website_reader import WebsiteReader
+
 from agno.tools.reasoning import ReasoningTools
 from agno.vectordb.lancedb import LanceDb, SearchType
 from agno.vectordb.chroma import ChromaDb
 from agno.db.sqlite.sqlite import SqliteDb
 from agno.vectordb.qdrant import Qdrant
-from agno.knowledge.reader.website_reader import WebsiteReader
 
 ollama_tool_models = [
     "llama3.1:8b",
@@ -29,8 +31,6 @@ if __name__ == "__main__":
         sys.exit(-1)
 
     memory_db = SqliteDb(db_file="agno-memory.db")
-    import datetime
-
     timestamp_str = datetime.datetime.now().strftime("%y%m%d%M")
 
     if len(sys.argv) == 3:
@@ -46,6 +46,8 @@ if __name__ == "__main__":
     print(f"Using embedder: {my_embedder}\n")
 
     time.sleep(3)
+
+    # Choose Vector Database
     if sys.argv[1] == "lancedb":
         knowledge = Knowledge(
             vector_db=LanceDb(
@@ -76,16 +78,14 @@ if __name__ == "__main__":
             ),
         )
 
+    # Bring in Knowledge
     knowledge.add_content(name="Job Description", path="ai-cloud-security-engineer.md")
-    knowledge.add_content(
-        name="Bespin Services",
-        url="https://bespinglobal.us/managed-security",
-        reader=WebsiteReader(),
-    )
+    # knowledge.add_content( name="Bespin Services", url="https://bespinglobal.us/managed-security", reader=WebsiteReader(), )
     print(f"Using knowledge: {knowledge}")
 
     time.sleep(3)
 
+    # Evaluate the different models
     for m in ollama_tool_models:
         print(f"\n\n\nTESTING {m} ")
         agent = Agent(
