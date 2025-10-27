@@ -81,7 +81,8 @@ if __name__ == "__main__":
         print(r)
         print (type(r))
 
-        # tools = [item['tool_args'] for item in r.tools]
-        #content = r.content
+        #tools = [item['tool_args'] for item in r.tools]
+        content = r.content
+        print(content)
         #metrics = r.metrics
-        # print(tools)
+        #print(tools)

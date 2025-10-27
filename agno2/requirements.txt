@@ -3,3 +3,6 @@ ollama
 openai
 lancedb
 tantivy
+chromadb
+pandas
+sqlalchemy
