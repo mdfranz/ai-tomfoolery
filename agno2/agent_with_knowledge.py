@@ -1,4 +1,4 @@
-import sys,time
+import sys, time
 from agno.agent import Agent, RunOutput
 from agno.knowledge.embedder.openai import OpenAIEmbedder
 from agno.knowledge.embedder.google import GeminiEmbedder
@@ -9,16 +9,18 @@ from agno.tools.reasoning import ReasoningTools
 from agno.vectordb.lancedb import LanceDb, SearchType
 from agno.vectordb.chroma import ChromaDb
 from agno.db.sqlite.sqlite import SqliteDb
+from agno.vectordb.qdrant import Qdrant
+from agno.knowledge.reader.website_reader import WebsiteReader
 
 ollama_tool_models = [
     "llama3.1:8b",
-    #"phi4-mini:3.8b",
+    # "phi4-mini:3.8b",
     "granite4:micro",
-    #"granite4",
-    "cogito:8b",
+    # "granite4",
+    # "cogito:8b",
     "qwen3:14b",
     "cogito:14b",
-    #"gpt-oss:20b",
+    # "gpt-oss:20b",
 ]
 
 if __name__ == "__main__":
@@ -27,17 +29,21 @@ if __name__ == "__main__":
         sys.exit(-1)
 
     memory_db = SqliteDb(db_file="agno-memory.db")
+    import datetime
 
-    if len(sys.argv) < 3:
+    timestamp_str = datetime.datetime.now().strftime("%y%m%d%M")
+
+    if len(sys.argv) == 3:
+        if sys.argv[2] == "gemini":
+            my_embedder = GeminiEmbedder()
+        elif sys.argv[2] == "openhermes":
+            my_embedder = OllamaEmbedder(id="openhermes", dimensions=4096)
+        elif sys.argv[2] == "qwen3":
+            my_embedder = OllamaEmbedder(id="qwen3-embedding:8b")
+    else:
         my_embedder = OpenAIEmbedder(id="text-embedding-3-small", dimensions=1536)
-    if sys.argv[2] == "gemini":
-        my_embedder = GeminiEmbedder()
-    elif sys.argv[2] == "openhermes":
-        my_embedder = OllamaEmbedder(id="openhermes",dimensions=4096)
-    elif sys.argv[2] == "qwen3":
-        my_embedder = OllamaEmbedder(id="qwen3-embedding:8b")
 
-    print(f"Embedder: {my_embedder}\n")
+    print(f"Using embedder: {my_embedder}\n")
 
     time.sleep(3)
     if sys.argv[1] == "lancedb":
@@ -57,11 +63,27 @@ if __name__ == "__main__":
                 collection="vectors",
                 path="tmp/chromadb",
                 persistent_client=True,
-                embedder=my_embedder
+                embedder=my_embedder,
+            ),
+        )
+    elif sys.argv[1] == "qdrant":
+        knowledge = Knowledge(
+            vector_db=Qdrant(
+                name="Qdrant Job Description",
+                collection=f"vectors-{timestamp_str}",
+                url="http://localhost:6333",
+                embedder=my_embedder,
             ),
         )
 
     knowledge.add_content(name="Job Description", path="ai-cloud-security-engineer.md")
+    knowledge.add_content(
+        name="Bespin Services",
+        url="https://bespinglobal.us/managed-security",
+        reader=WebsiteReader(),
+    )
+    print(f"Using knowledge: {knowledge}")
+
     time.sleep(3)
 
     for m in ollama_tool_models:
@@ -82,12 +104,12 @@ if __name__ == "__main__":
             debug_mode=True,
             db=memory_db,
             add_history_to_context=True,
-            num_history_runs=3
+            num_history_runs=3,
         )
 
         try:
             agent.print_response(
-                "What do I need to succeed in the Cloud AI Security Engineer role",
+                "What do I need to succeed in the Cloud AI Security Engineer role in Bespin Managed Security Services",
                 stream=True,
                 show_full_reasoning=True,
                 stream_events=True,

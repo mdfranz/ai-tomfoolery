@@ -6,3 +6,8 @@ tantivy
 chromadb
 pandas
 sqlalchemy
+google-genai
+qdrant-client
+beautifulsoup4
+chonkie[openai]
+chonkie[st]
