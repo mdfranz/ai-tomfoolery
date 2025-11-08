@@ -1,21 +1,16 @@
 import sys, time, datetime
-
-# Agents and Models
 from agno.agent import Agent, RunOutput
 from agno.models.ollama import Ollama
 from agno.models.google import Gemini
 
-# Embedders
+
 from agno.knowledge.embedder.openai import OpenAIEmbedder
 from agno.knowledge.embedder.google import GeminiEmbedder
 from agno.knowledge.embedder.ollama import OllamaEmbedder
-
-# Tools
 from agno.knowledge.knowledge import Knowledge
 from agno.knowledge.reader.website_reader import WebsiteReader
-from agno.tools.reasoning import ReasoningTools
 
-# Storage & Vector DB
+from agno.tools.reasoning import ReasoningTools
 from agno.vectordb.lancedb import LanceDb, SearchType
 from agno.vectordb.chroma import ChromaDb
 from agno.db.sqlite.sqlite import SqliteDb
@@ -37,7 +32,6 @@ if __name__ == "__main__":
         print("foo.py <chromadb|lancedb> [openai|fastembed|openhermes")
         sys.exit(-1)
 
-    # Use SQLite for Session and Content Index
     memory_db = SqliteDb(db_file="agno-memory.db")
     contents_db = SqliteDb(db_file="my_knowledge.db")
 
@@ -82,11 +76,11 @@ if __name__ == "__main__":
 
     knowledge = Knowledge(vector_db=vdb, contents_db=contents_db)
     knowledge.add_content(name="Job Description", path="ai-cloud-security-engineer.md")
-   # knowledge.add_content(
-   #     name="Bespin Services",
-   #     url="https://bespinglobal.us/managed-security",
-   #     reader=WebsiteReader(),
-   # )
+    knowledge.add_content(
+        name="Bespin Services",
+        url="https://bespinglobal.us/managed-security",
+        reader=WebsiteReader(),
+    )
     print(f"Using knowledge: {knowledge}")
 
     print("Starting with API Models")
@@ -103,14 +97,14 @@ if __name__ == "__main__":
         tools=[ReasoningTools(add_instructions=True)],
         add_datetime_to_context=False,
         markdown=True,
-        debug_mode=True,
+        debug_mode=False,
         db=memory_db,
         add_history_to_context=False,
         num_history_runs=3,
     )
     try:
         agent.print_response(
-            "I am applying for the  Cloud AI Security Engineer role in Bespin Managed Security Services. Use the provided job description to describe the considerations if I  will be succesful in this role",
+            "I am applying for the  Cloud AI Security Engineer role in Bespin Managed Security Services. Use the provided job description and information from the Bespin Services and I want know if I will be succesful in this role. Also use information about Bespin Managed Services to craft the list of success criteria",
             stream=True,
             show_full_reasoning=True,
             stream_events=True,
@@ -134,14 +128,15 @@ if __name__ == "__main__":
             tools=[ReasoningTools(add_instructions=True)],
             add_datetime_to_context=False,
             markdown=True,
-            debug_mode=True,
+            debug_mode=False,
             db=memory_db,
             add_history_to_context=False,
             num_history_runs=3,
         )
 
         try:
-            agent.print_response("I am applying for the  Cloud AI Security Engineer role in Bespin Managed Security Services. Use the provided job description to describe the considerations if I  will be succesful in this role",
+            agent.print_response(
+                "I am applying for the  Cloud AI Security Engineer role in Bespin Managed Security Services. Use the provided job description and information from the Bespin Services and I want know if I will be succesful in this role. Also use information about Bespin Managed Services to craft the list of success criteria",
                 stream=True,
                 show_full_reasoning=True,
                 stream_events=True,
