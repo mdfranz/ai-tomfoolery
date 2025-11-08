@@ -1,5 +1,6 @@
-agno
+agno==1.8.3
 anthropic
+chromadb
 openai
 ollama
 boto3
