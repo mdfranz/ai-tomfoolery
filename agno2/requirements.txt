@@ -11,3 +11,5 @@ qdrant-client
 beautifulsoup4
 chonkie[openai]
 chonkie[st]
+anthropic
+mcp
