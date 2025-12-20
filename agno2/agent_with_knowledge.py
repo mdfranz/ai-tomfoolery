@@ -20,16 +20,15 @@ from agno.vectordb.lancedb import LanceDb, SearchType
 from agno.vectordb.chroma import ChromaDb
 from agno.db.sqlite.sqlite import SqliteDb
 from agno.vectordb.qdrant import Qdrant
-
 ollama_tool_models = [
-    "llama3.1:8b",
+    "llama3.1:8b","rnj-1:latest",
     # "phi4-mini:3.8b",
     "granite4:micro",
     # "granite4",
     # "cogito:8b",
-    "qwen3:14b",
+    "qwen3:14b","ministral-3:14b",
     "cogito:14b",
-    # "gpt-oss:20b",
+    "gpt-oss:20b",
 ]
 
 if __name__ == "__main__":
@@ -42,6 +41,10 @@ if __name__ == "__main__":
     contents_db = SqliteDb(db_file="my_knowledge.db")
 
     timestamp_str = datetime.datetime.now().strftime("%y%m%d%M")
+
+
+    if len(sys.argv) == 4:
+        ollama_tool_models = [ sys.argv[3] ]
 
     if len(sys.argv) == 3:
         if sys.argv[2] == "gemini":
